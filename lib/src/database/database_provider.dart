@@ -8,11 +8,11 @@ class DatabaseProvider {
 
   Future<void> open() async {
     final databasesPath = await getDatabasesPath();
-    final path = join(databasesPath, 'notes_app.db');
+    final path = join(databasesPath, 'notes_app_v3.db');
 
     _database = await openDatabase(
       path,
-      version: 2,
+      version: 3,
       onCreate: (Database db, int version) async {
         await db.execute('''
           CREATE TABLE notes (
@@ -20,6 +20,9 @@ class DatabaseProvider {
             title TEXT,
             description TEXT,
             color TEXT,
+            tags TEXT,
+            priority INTEGER,
+            is_active INTEGER,
             created_at TEXT
           )
         ''');
@@ -53,6 +56,13 @@ class DatabaseProvider {
     }
 
     return null;
+  }
+
+  Future<int?> deleteById(int id) async {
+    var result =
+        await _database.delete('notes', where: 'id = ?', whereArgs: [id]);
+
+    return result;
   }
 
   Future close() async => _database.close();

@@ -12,6 +12,17 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
+  Future<List<NoteModel>> _notesData = DatabaseProvider().getAll();
+
+  Future<void> handleDelete(int id) async {
+    await DatabaseProvider().deleteById(id);
+    Future<List<NoteModel>> notes = DatabaseProvider().getAll();
+
+    setState(() {
+      _notesData = notes;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +34,7 @@ class _ListPageState extends State<ListPage> {
       ),
       body: Center(
         child: FutureBuilder<List<NoteModel>>(
-          future: DatabaseProvider().getAll(),
+          future: _notesData,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final notes = snapshot.data!;
@@ -32,10 +43,15 @@ class _ListPageState extends State<ListPage> {
                 itemBuilder: (context, index) {
                   final note = notes[index];
                   return NoteCard(
+                    delete: handleDelete,
+                    id: note.id!,
                     title: note.title!,
                     description: note.description!,
                     createdAt: note.createdAt.toString(),
                     color: note.color!,
+                    priority: note.priority ?? 0,
+                    isActive: note.isActive ?? 0,
+                    tags: note.tags ?? '',
                   );
                 },
               );
