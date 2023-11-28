@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:project/src/database/database_provider.dart';
 import 'package:project/src/enums/priorities.dart';
+import 'package:project/src/models/note_model.dart';
 
 class NoteCard extends StatelessWidget {
-  final int id;
+  final String id;
   final String title;
   final String description;
   final String createdAt;
@@ -12,6 +13,7 @@ class NoteCard extends StatelessWidget {
   final int isActive;
   final String tags;
   final Function delete;
+  final Function update;
 
   NoteCard({
     required this.id,
@@ -23,6 +25,7 @@ class NoteCard extends StatelessWidget {
     required this.tags,
     required this.isActive,
     required this.delete,
+    required this.update,
   });
 
   @override
@@ -36,6 +39,17 @@ class NoteCard extends StatelessWidget {
 
     return GestureDetector(
         onDoubleTap: () => {delete(id)},
+        onTap: () => {
+              update(NoteModel(
+                id: id,
+                title: title,
+                description: description,
+                color: color,
+                tags: tags,
+                priority: priority,
+                isActive: isActive,
+              ))
+            },
         child: Card(
           elevation: 6,
           margin: const EdgeInsets.fromLTRB(24, 16, 24, 8),

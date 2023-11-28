@@ -4,7 +4,7 @@ import 'package:project/src/database/database_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final database = DatabaseProvider();
-  await database.open();
+  // final database = DatabaseProvider();
+  // await database.open();
   runApp(const AppWidget());
 }
